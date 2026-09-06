@@ -1344,8 +1344,12 @@ guards and be dispatched inline, not via `_process_message_background()`
 
 ### Squash merges from stale branches silently revert recent fixes
 Before squash-merging a PR, ensure the branch is up to date with `main`
-(`git fetch origin main && git reset --hard origin/main` in the worktree,
-then re-apply the PR's commits). A stale branch's version of an unrelated
+(`git fetch origin main && git merge origin/main` in the worktree). Use
+**merge**, never `git reset --hard origin/main` — that discards the branch's
+own commits, which is why the original wording had to add "then re-apply the
+PR's commits". `git reset --hard` in a worktree is what caused the 2026-07-20
+data loss and is a FORBIDDEN command under `~/.claude/CLAUDE.md`; it must
+never appear as standing advice. A stale branch's version of an unrelated
 file will silently overwrite recent fixes on main when squashed. Verify
 with `git diff HEAD~1..HEAD` after merging — unexpected deletions are a
 red flag.
